@@ -1,24 +1,37 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+
+import { AppButton, AppText, Card, Screen } from '@/src/shared/components';
+import { theme } from '../src/shared/config/theme';
 
 export default function HomeScreen() {
   return (
-    <View style={styles.screen}>
-      <Text style={styles.title}>Task Manager</Text>
-    </View>
+    <Screen>
+      <View style={styles.header}>
+        <AppText variant="title">Task Manager</AppText>
+      </View>
+
+      <Card style={styles.card}>
+        <AppText variant="subtitle">Пока здесь пусто</AppText>
+
+        <AppText variant="body" color={theme.colors.textMuted} style={styles.cardText}>
+          На следующем шаге создадим сущность Task и первую карточку задачи.
+        </AppText>
+
+        <AppButton onPress={() => console.log('Create task pressed')}>Добавить задачу</AppButton>
+      </Card>
+    </Screen>
   );
 }
 
 const styles = StyleSheet.create({
-  screen: {
-    flex: 1,
-    padding: 24,
-    justifyContent: 'center',
-    backgroundColor: '#0F172A',
+  header: {
+    gap: theme.spacing.sm,
+    marginBottom: theme.spacing.xl,
   },
-  title: {
-    fontSize: 34,
-    fontWeight: '700',
-    color: '#F8FAFC',
-    marginBottom: 12,
+  card: {
+    gap: theme.spacing.md,
+  },
+  cardText: {
+    marginBottom: theme.spacing.sm,
   },
 });
