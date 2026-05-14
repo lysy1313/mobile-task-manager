@@ -10,6 +10,13 @@ export default function RootLayout() {
           headerShown: false,
         }}
       />
+      <Stack.Screen
+        name="create-task"
+        options={{
+          title: 'Create Task',
+          headerShown: false,
+        }}
+      />
     </Stack>
   );
 }
