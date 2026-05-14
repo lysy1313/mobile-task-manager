@@ -1,22 +1,36 @@
 import { ReactNode } from 'react';
-import { StyleSheet, ViewStyle } from 'react-native';
+import { StyleProp, StyleSheet, ViewStyle } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { theme } from '../config/theme';
+import { theme } from '@/src/shared/config/theme';
 
 type ScreenProps = {
   children: ReactNode;
-  style?: ViewStyle;
+  style?: StyleProp<ViewStyle>;
+  withPadding?: boolean;
+  backgroundColor?: string;
 };
 
-export function Screen({ children, style }: ScreenProps) {
-  return <SafeAreaView style={[styles.screen, style]}>{children}</SafeAreaView>;
+export function Screen({
+  children,
+  style,
+  withPadding = true,
+  backgroundColor = theme.colors.background,
+}: ScreenProps) {
+  return (
+    <SafeAreaView
+      style={[styles.screen, { backgroundColor }, withPadding && styles.padding, style]}
+    >
+      {children}
+    </SafeAreaView>
+  );
 }
 
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: theme.colors.background,
+  },
+  padding: {
     paddingHorizontal: theme.spacing.xl,
     paddingVertical: theme.spacing.lg,
   },

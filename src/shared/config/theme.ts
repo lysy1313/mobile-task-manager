@@ -1,18 +1,22 @@
 export const theme = {
   colors: {
-    background: '#3056ad',
-    surface: '#1e293b7c',
-    surfaceLight: '#575c64',
+    background: '#1E3A8A',
+    topSection: '#1a265e',
+
+    surface: '#253B6E',
+    surfaceStrong: '#172554',
 
     text: '#F8FAFC',
-    textMuted: '#a5a5a5',
+    textMuted: '#CBD5E1',
 
-    primary: '#3865f8',
-    primaryDark: '#0251c7',
+    primary: '#3B82F6',
+    primaryDark: '#2563EB',
 
-    border: '#969696',
-    danger: '#EF4444',
+    border: '#64748B',
+
     success: '#22C55E',
+    danger: '#EF4444',
+    warning: '#F59E0B',
   },
 
   spacing: {
