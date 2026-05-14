@@ -1,74 +1,81 @@
-import { router } from 'expo-router';
+import { router, useFocusEffect } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
+import { useCallback, useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 
-import { Task } from '@/src/entities/model/task/task.types';
-import { AppIconButton, AppText, Screen } from '@/src/shared/components';
+import { getStoredTasks } from '@/src/entities/task/model/task.storage';
+import { Task } from '@/src/entities/task/model/task.types';
+import { AppIconButton, AppLoader, AppText, Screen } from '@/src/shared/components';
 import { theme } from '@/src/shared/config/theme';
+import { stylesEmptyState, TasksEmptyState } from '@/src/widgets/tasks-empty-state/TasksEmptyState';
 import { TasksHeader } from '@/src/widgets/tasks-header/TasksHeader';
 import { TasksList } from '@/src/widgets/tasks-list/TasksList';
 
-export const mockTasks: Task[] = [
-  {
-    id: '1',
-    title: 'Prepare project structure',
-    description: 'Create the base FSD structure and shared UI components.',
-    dateTime: '2026-05-15T10:00:00.000Z',
-    location: 'Home office',
-    status: 'in_progress',
-    createdAt: '2026-05-14T12:00:00.000Z',
-  },
-  {
-    id: '2',
-    title: 'Design task form',
-    description: 'Build the first version of the create task screen.',
-    dateTime: '2026-05-16T14:30:00.000Z',
-    location: 'Workspace',
-    status: 'completed',
-    createdAt: '2026-05-14T13:20:00.000Z',
-  },
-  {
-    id: '3',
-    title: 'Test date picker',
-    description: 'Check date picker behavior on iPhone with Expo Go.',
-    dateTime: '2026-05-17T18:00:00.000Z',
-    location: 'Mobile device',
-    status: 'cancelled',
-    createdAt: '2026-05-14T15:45:00.000Z',
-  },
-];
-
 export default function HomeScreen() {
-  const totalTasks = mockTasks.length;
-  const completedTasks = mockTasks.filter((task) => task.status === 'completed').length;
-  const inProgressTasks = mockTasks.filter((task) => task.status === 'in_progress').length;
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useFocusEffect(
+    useCallback(() => {
+      async function loadTasks() {
+        try {
+          setIsLoading(true);
+
+          const storedTasks = await getStoredTasks();
+
+          setTasks(storedTasks);
+        } finally {
+          setIsLoading(false);
+        }
+      }
+
+      loadTasks();
+    }, []),
+  );
 
   return (
     <Screen withPadding={false} backgroundColor={theme.colors.topSection}>
       <StatusBar style="light" />
 
-      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.content}>
-        <TasksHeader
-          totalTasks={totalTasks}
-          inProgressTasks={inProgressTasks}
-          completedTasks={completedTasks}
-        />
+      <View style={styles.screenContent}>
+        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.content}>
+          <TasksHeader tasks={tasks} />
 
-        <View style={styles.mainContent}>
-          <View style={styles.sectionHeader}>
-            <AppText variant="subtitle">All tasks</AppText>
+          <View style={styles.mainContent}>
+            <View style={styles.sectionHeader}>
+              <AppText variant="subtitle">All tasks</AppText>
+            </View>
 
-            <AppIconButton icon="+" onPress={() => router.push('/create-task')} />
+            {isLoading ? (
+              <View style={stylesEmptyState.emptyState}>
+                <AppLoader text="Loading tasks..." />
+              </View>
+            ) : tasks.length > 0 ? (
+              <TasksList tasks={tasks} />
+            ) : (
+              <TasksEmptyState />
+            )}
           </View>
+        </ScrollView>
 
-          <TasksList tasks={mockTasks} />
-        </View>
-      </ScrollView>
+        {tasks.length !== 0 && (
+          <AppIconButton
+            icon="plus"
+            onPress={() => router.push('/create-task')}
+            style={styles.floatingButton}
+            iconColor={theme.colors.text}
+          />
+        )}
+      </View>
     </Screen>
   );
 }
 
 const styles = StyleSheet.create({
+  screenContent: {
+    flex: 1,
+  },
+
   content: {
     flexGrow: 1,
   },
@@ -81,13 +88,22 @@ const styles = StyleSheet.create({
     paddingTop: theme.spacing.xl + theme.radius.xl,
 
     paddingHorizontal: theme.spacing.xl,
-    paddingBottom: theme.spacing.xxl,
+    paddingBottom: 96,
   },
 
   sectionHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
     marginBottom: theme.spacing.md,
+  },
+
+  floatingButton: {
+    position: 'absolute',
+    right: theme.spacing.lg,
+    bottom: theme.spacing.lg,
+
+    backgroundColor: theme.colors.topSection,
+    borderColor: theme.colors.primaryDark,
+
+    zIndex: 10,
+    elevation: 10,
   },
 });
