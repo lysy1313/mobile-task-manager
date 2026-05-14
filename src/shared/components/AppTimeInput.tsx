@@ -1,6 +1,6 @@
 import { AppDateTimePickerInput } from './AppDateTimePickerInput';
 
-type AppDateInputProps = {
+type AppTimeInputProps = {
   label?: string;
   value: Date | null;
   onChange: (date: Date) => void;
@@ -8,35 +8,34 @@ type AppDateInputProps = {
   error?: string;
 };
 
-function formatDate(date: Date | null, placeholder: string) {
+function formatTime(date: Date | null, placeholder: string) {
   if (!date) {
     return placeholder;
   }
 
-  return date.toLocaleDateString('en-US', {
-    day: '2-digit',
-    month: 'long',
-    year: 'numeric',
+  return date.toLocaleTimeString('en-US', {
+    hour: '2-digit',
+    minute: '2-digit',
   });
 }
 
-export function AppDateInput({
+export function AppTimeInput({
   label,
   value,
   onChange,
-  placeholder = 'Select date',
+  placeholder = 'Select time',
   error,
-}: AppDateInputProps) {
+}: AppTimeInputProps) {
   return (
     <AppDateTimePickerInput
       label={label}
-      title="Select date"
+      title="Select time"
       value={value}
       onChange={onChange}
       placeholder={placeholder}
-      mode="date"
+      mode="time"
       error={error}
-      formatValue={formatDate}
+      formatValue={formatTime}
     />
   );
 }

@@ -1,21 +1,11 @@
 import { router } from 'expo-router';
-import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
-import {
-  AppButton,
-  AppDateInput,
-  AppIconButton,
-  AppText,
-  AppTextInput,
-  Card,
-  KeyboardAwareScreen,
-} from '@/src/shared/components';
+import { CreateTaskForm } from '@/src/features/create-task/ui/CreateTaskForm';
+import { AppIconButton, AppText, KeyboardAwareScreen } from '@/src/shared/components';
 import { theme } from '@/src/shared/config/theme';
 
 export default function CreateTaskScreen() {
-  const [deadline, setDeadline] = useState<Date | null>(null);
-
   function handleGoBack() {
     if (router.canGoBack()) {
       router.back();
@@ -25,12 +15,15 @@ export default function CreateTaskScreen() {
     router.replace('/');
   }
 
+  function handleSuccess() {
+    router.replace('/');
+  }
+
   return (
     <KeyboardAwareScreen>
       <View style={styles.header}>
         <View style={styles.titleRow}>
-          <AppIconButton icon="←" onPress={handleGoBack} />
-
+          <AppIconButton icon="arrow-left" onPress={handleGoBack} />
           <AppText variant="title">Create Task</AppText>
         </View>
 
@@ -39,24 +32,7 @@ export default function CreateTaskScreen() {
         </AppText>
       </View>
 
-      <Card style={styles.card}>
-        <AppTextInput label="Title" placeholder="Enter title" />
-
-        <AppTextInput label="Location" placeholder="Enter location" />
-
-        <AppTextInput
-          label="Description"
-          placeholder="Enter description"
-          multiline
-          numberOfLines={5}
-        />
-
-        <AppDateInput label="Deadline" value={deadline} onChange={setDeadline} />
-
-        <View style={styles.actions}>
-          <AppButton onPress={() => console.log('Create task')}>Create Task</AppButton>
-        </View>
-      </Card>
+      <CreateTaskForm onSuccess={handleSuccess} />
     </KeyboardAwareScreen>
   );
 }
@@ -71,11 +47,5 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     gap: theme.spacing.md,
-  },
-  card: {
-    gap: theme.spacing.md,
-  },
-  actions: {
-    marginTop: theme.spacing.sm,
   },
 });

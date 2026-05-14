@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { Pressable, StyleSheet, ViewStyle } from 'react-native';
+import { Pressable, StyleProp, StyleSheet, ViewStyle } from 'react-native';
 
 import { theme } from '../config/theme';
 import { AppText } from './AppText';
@@ -8,7 +8,7 @@ type AppButtonProps = {
   children: ReactNode;
   onPress?: () => void;
   disabled?: boolean;
-  style?: ViewStyle;
+  style?: StyleProp<ViewStyle>;
 };
 
 export function AppButton({ children, onPress, disabled = false, style }: AppButtonProps) {
