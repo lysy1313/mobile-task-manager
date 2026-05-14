@@ -1,20 +1,22 @@
 import { ReactNode } from 'react';
-import { StyleProp, StyleSheet, Text, TextStyle } from 'react-native';
+import { StyleProp, StyleSheet, Text, TextProps, TextStyle } from 'react-native';
 
 import { theme } from '../config/theme';
 
 type TextVariant = 'title' | 'subtitle' | 'body' | 'caption';
 
-type AppTextProps = {
+type AppTextProps = TextProps & {
   children: ReactNode;
   variant?: TextVariant;
   color?: string;
   style?: StyleProp<TextStyle>;
 };
 
-export function AppText({ children, variant = 'body', color, style }: AppTextProps) {
+export function AppText({ children, variant = 'body', color, style, ...props }: AppTextProps) {
   return (
-    <Text style={[styles.base, styles[variant], color ? { color } : null, style]}>{children}</Text>
+    <Text style={[styles.base, styles[variant], color ? { color } : null, style]} {...props}>
+      {children}
+    </Text>
   );
 }
 
@@ -29,7 +31,7 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: '700',
     lineHeight: 26,
   },
   body: {

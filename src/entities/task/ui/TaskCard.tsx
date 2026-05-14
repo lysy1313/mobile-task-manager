@@ -1,66 +1,67 @@
-import { StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 
-import { taskStatusLabels } from '@/src/entities/task/model/task.constants';
 import { formatTaskDateTime } from '@/src/entities/task/model/task.lib';
-import { Task, TaskStatus } from '@/src/entities/task/model/task.types';
+import type { Task } from '@/src/entities/task/model/task.types';
 import { AppText, Card } from '@/src/shared/components';
 import { theme } from '@/src/shared/config/theme';
+import { StatusBadge } from './StatusBadge/StatusBadge';
+import { TaskMetaRow } from './TaskMetaRow/TaskMetaRow';
 
 type TaskCardProps = {
   task: Task;
+  onPress?: () => void;
 };
 
-function getStatusStyle(status: TaskStatus) {
-  switch (status) {
-    case 'completed':
-      return styles.statusCompleted;
-
-    case 'cancelled':
-      return styles.statusCancelled;
-
-    case 'in_progress':
-    default:
-      return styles.statusInProgress;
-  }
-}
-
-export function TaskCard({ task }: TaskCardProps) {
+export function TaskCard({ task, onPress }: TaskCardProps) {
   return (
-    <Card style={styles.taskCard}>
-      <View style={styles.taskHeader}>
-        <AppText variant="subtitle" style={styles.taskTitle}>
-          {task.title}
-        </AppText>
-
-        <View style={[styles.statusBadge, getStatusStyle(task.status)]}>
-          <AppText variant="caption" style={styles.statusText}>
-            {taskStatusLabels[task.status]}
+    <Pressable
+      onPress={onPress}
+      accessibilityRole="button"
+      accessibilityLabel={`Open task ${task.title}`}
+      style={({ pressed }) => [styles.pressable, pressed && styles.pressed]}
+    >
+      <Card style={styles.taskCard}>
+        <View style={styles.taskHeader}>
+          <AppText variant="subtitle" style={styles.taskTitle} numberOfLines={2}>
+            {task.title}
           </AppText>
+
+          <StatusBadge status={task.status} />
         </View>
-      </View>
 
-      <AppText variant="body" color={theme.colors.textMuted}>
-        {task.description}
-      </AppText>
-
-      <View style={styles.metaList}>
-        <AppText variant="caption" color={theme.colors.textMuted}>
-          Date: {formatTaskDateTime(task.dateTime)}
+        <AppText
+          variant="body"
+          color={theme.colors.textMuted}
+          numberOfLines={2}
+          ellipsizeMode="tail"
+        >
+          {task.description}
         </AppText>
 
-        <AppText variant="caption" color={theme.colors.textMuted}>
-          Location: {task.location}
-        </AppText>
+        <View style={styles.metaList}>
+          <TaskMetaRow label="Date" value={formatTaskDateTime(task.dateTime)} />
+          <TaskMetaRow label="Location" value={task.location} />
+          <TaskMetaRow label="Created" value={formatTaskDateTime(task.createdAt)} />
+        </View>
 
-        <AppText variant="caption" color={theme.colors.textMuted}>
-          Created: {formatTaskDateTime(task.createdAt)}
+        <AppText variant="caption" color={theme.colors.primary}>
+          Tap to view details
         </AppText>
-      </View>
-    </Card>
+      </Card>
+    </Pressable>
   );
 }
 
 const styles = StyleSheet.create({
+  pressable: {
+    borderRadius: theme.radius.lg,
+  },
+
+  pressed: {
+    opacity: 0.86,
+    transform: [{ scale: 0.99 }],
+  },
+
   taskCard: {
     gap: theme.spacing.md,
     backgroundColor: theme.colors.surface,
@@ -77,30 +78,10 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 
-  statusBadge: {
-    borderRadius: 999,
-    paddingHorizontal: theme.spacing.md,
-    paddingVertical: theme.spacing.xs,
-  },
-
-  statusInProgress: {
-    backgroundColor: theme.colors.primary,
-  },
-
-  statusCompleted: {
-    backgroundColor: theme.colors.success,
-  },
-
-  statusCancelled: {
-    backgroundColor: theme.colors.danger,
-  },
-
-  statusText: {
-    color: theme.colors.text,
-    fontWeight: '700',
-  },
-
   metaList: {
     gap: theme.spacing.xs,
+    borderTopWidth: 1,
+    borderTopColor: theme.colors.border,
+    paddingTop: theme.spacing.md,
   },
 });

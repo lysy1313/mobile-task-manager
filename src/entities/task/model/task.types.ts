@@ -42,6 +42,11 @@ export const CreateTaskSchema = z.object({
   location: z.string().trim().min(1, 'Location is required').max(120, 'Location is too long'),
 });
 
+export const UpdateTaskSchema = CreateTaskSchema.extend({
+  status: TaskStatusSchema,
+});
+
 export type TaskStatus = z.infer<typeof TaskStatusSchema>;
 export type Task = z.infer<typeof TaskSchema>;
 export type CreateTaskFormValues = z.infer<typeof CreateTaskSchema>;
+export type UpdateTaskFormValues = z.infer<typeof UpdateTaskSchema>;

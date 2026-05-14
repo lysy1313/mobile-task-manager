@@ -1,4 +1,3 @@
-// @flow
 import { AppButton, AppText } from '@/src/shared/components';
 import { theme } from '@/src/shared/config/theme';
 import { router } from 'expo-router';

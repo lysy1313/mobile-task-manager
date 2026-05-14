@@ -6,13 +6,14 @@ import { theme } from '@/src/shared/config/theme';
 
 type TasksListProps = {
   tasks: Task[];
+  onTaskPress?: (taskId: string) => void;
 };
 
-export function TasksList({ tasks }: TasksListProps) {
+export function TasksList({ tasks, onTaskPress }: TasksListProps) {
   return (
     <View style={styles.taskList}>
       {tasks.map((task) => (
-        <TaskCard key={task.id} task={task} />
+        <TaskCard key={task.id} task={task} onPress={() => onTaskPress?.(task.id)} />
       ))}
     </View>
   );
