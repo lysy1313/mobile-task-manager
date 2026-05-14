@@ -1,8 +1,8 @@
 import { StyleSheet, View } from 'react-native';
 
-import { taskStatusLabels } from '@/src/entities/model/task/task.constants';
-import { formatTaskDateTime } from '@/src/entities/model/task/task.lib';
-import { Task, TaskStatus } from '@/src/entities/model/task/task.types';
+import { taskStatusLabels } from '@/src/entities/task/model/task.constants';
+import { formatTaskDateTime } from '@/src/entities/task/model/task.lib';
+import { Task, TaskStatus } from '@/src/entities/task/model/task.types';
 import { AppText, Card } from '@/src/shared/components';
 import { theme } from '@/src/shared/config/theme';
 

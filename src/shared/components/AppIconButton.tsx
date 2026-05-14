@@ -1,23 +1,29 @@
-import { Pressable, StyleSheet, ViewStyle } from 'react-native';
+import { Feather } from '@expo/vector-icons';
+import { Pressable, StyleProp, StyleSheet, ViewStyle } from 'react-native';
 
-import { AppText } from '@/src/shared/components';
 import { theme } from '@/src/shared/config/theme';
 
 type AppIconButtonProps = {
-  icon: string;
+  icon: keyof typeof Feather.glyphMap;
   onPress?: () => void;
-  style?: ViewStyle;
+  style?: StyleProp<ViewStyle>;
+  iconColor?: string;
+  iconSize?: number;
 };
 
-export function AppIconButton({ icon, onPress, style }: AppIconButtonProps) {
+export function AppIconButton({
+  icon,
+  onPress,
+  style,
+  iconColor = theme.colors.text,
+  iconSize = 22,
+}: AppIconButtonProps) {
   return (
     <Pressable
       onPress={onPress}
       style={({ pressed }) => [styles.button, pressed && styles.pressed, style]}
     >
-      <AppText variant="subtitle" style={styles.icon}>
-        {icon}
-      </AppText>
+      <Feather name={icon} size={iconSize} color={iconColor} />
     </Pressable>
   );
 }
@@ -35,8 +41,5 @@ const styles = StyleSheet.create({
   },
   pressed: {
     opacity: 0.75,
-  },
-  icon: {
-    lineHeight: 24,
   },
 });

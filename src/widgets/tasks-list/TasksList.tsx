@@ -1,7 +1,7 @@
 import { StyleSheet, View } from 'react-native';
 
-import { Task } from '@/src/entities/model/task/task.types';
-import { TaskCard } from '@/src/entities/task/components/TaskCard';
+import { Task } from '@/src/entities/task/model/task.types';
+import { TaskCard } from '@/src/entities/task/ui/TaskCard';
 import { theme } from '@/src/shared/config/theme';
 
 type TasksListProps = {

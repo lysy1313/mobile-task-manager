@@ -1,15 +1,53 @@
 import { StyleSheet, View } from 'react-native';
 
+import { Task } from '@/src/entities/task/model/task.types';
 import { AppText, Card } from '@/src/shared/components';
 import { theme } from '@/src/shared/config/theme';
 
 type TasksHeaderProps = {
-  totalTasks: number;
-  inProgressTasks: number;
-  completedTasks: number;
+  tasks: Task[];
 };
 
-export function TasksHeader({ totalTasks, inProgressTasks, completedTasks }: TasksHeaderProps) {
+type StatItem = {
+  label: string;
+  value: number;
+  color: string;
+  backgroundColor: string;
+};
+
+export function TasksHeader({ tasks }: TasksHeaderProps) {
+  const totalTasks = tasks.length;
+  const completedTasks = tasks.filter((task) => task.status === 'completed').length;
+  const inProgressTasks = tasks.filter((task) => task.status === 'in_progress').length;
+  const cancelledTasks = tasks.filter((task) => task.status === 'cancelled').length;
+
+  const statItems: StatItem[] = [
+    {
+      label: 'Total',
+      value: totalTasks,
+      color: theme.colors.text,
+      backgroundColor: 'rgba(182, 182, 182, 0.14)',
+    },
+    {
+      label: 'Active',
+      value: inProgressTasks,
+      color: theme.colors.primary,
+      backgroundColor: 'rgba(59, 130, 246, 0.14)',
+    },
+    {
+      label: 'Done',
+      value: completedTasks,
+      color: theme.colors.success,
+      backgroundColor: 'rgba(34, 197, 94, 0.14)',
+    },
+    {
+      label: 'Cancelled',
+      value: cancelledTasks,
+      color: theme.colors.danger,
+      backgroundColor: 'rgba(239, 68, 68, 0.14)',
+    },
+  ];
+
   return (
     <View style={styles.topSection}>
       <View style={styles.header}>
@@ -20,30 +58,24 @@ export function TasksHeader({ totalTasks, inProgressTasks, completedTasks }: Tas
         </AppText>
       </View>
 
-      <View style={styles.statsRow}>
-        <Card style={styles.statCard}>
-          <AppText variant="caption" color={theme.colors.textMuted}>
-            Total
-          </AppText>
+      <View style={styles.statsGrid}>
+        {statItems.map((item) => (
+          <Card key={item.label} style={styles.statCard}>
+            <View style={styles.statHeader}>
+              <View style={[styles.statDot, { backgroundColor: item.color }]} />
 
-          <AppText variant="subtitle">{totalTasks}</AppText>
-        </Card>
+              <AppText variant="caption" color={theme.colors.textMuted}>
+                {item.label}
+              </AppText>
+            </View>
 
-        <Card style={styles.statCard}>
-          <AppText variant="caption" color={theme.colors.textMuted}>
-            Active
-          </AppText>
-
-          <AppText variant="subtitle">{inProgressTasks}</AppText>
-        </Card>
-
-        <Card style={styles.statCard}>
-          <AppText variant="caption" color={theme.colors.textMuted}>
-            Done
-          </AppText>
-
-          <AppText variant="subtitle">{completedTasks}</AppText>
-        </Card>
+            <View style={[styles.statValueBox, { backgroundColor: item.backgroundColor }]}>
+              <AppText variant="title" color={item.color} style={styles.statValue}>
+                {item.value}
+              </AppText>
+            </View>
+          </Card>
+        ))}
       </View>
     </View>
   );
@@ -68,14 +100,40 @@ const styles = StyleSheet.create({
     marginBottom: theme.spacing.xl,
   },
 
-  statsRow: {
+  statsGrid: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
     gap: theme.spacing.md,
   },
 
   statCard: {
-    flex: 1,
-    gap: theme.spacing.xs,
+    width: '47.5%',
+    gap: theme.spacing.md,
     backgroundColor: theme.colors.surfaceStrong,
+    padding: theme.spacing.md,
+  },
+
+  statHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: theme.spacing.sm,
+  },
+
+  statDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 999,
+  },
+
+  statValueBox: {
+    minHeight: 54,
+    borderRadius: theme.radius.md,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  statValue: {
+    fontSize: 28,
+    lineHeight: 34,
   },
 });
