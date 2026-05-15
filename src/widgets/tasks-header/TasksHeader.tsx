@@ -23,19 +23,19 @@ export function TasksHeader({ tasks }: TasksHeaderProps) {
 
   const statItems: StatItem[] = [
     {
-      label: 'Total',
+      label: 'Total tasks',
       value: totalTasks,
       color: theme.colors.text,
       backgroundColor: 'rgba(182, 182, 182, 0.14)',
     },
     {
-      label: 'Active',
+      label: 'In progress',
       value: inProgressTasks,
       color: theme.colors.primary,
       backgroundColor: 'rgba(59, 130, 246, 0.14)',
     },
     {
-      label: 'Done',
+      label: 'Completed',
       value: completedTasks,
       color: theme.colors.success,
       backgroundColor: 'rgba(34, 197, 94, 0.14)',
@@ -54,26 +54,27 @@ export function TasksHeader({ tasks }: TasksHeaderProps) {
         <AppText variant="title">Tasks</AppText>
 
         <AppText variant="body" color={theme.colors.textMuted}>
-          Temporary task list screen.
+          Stay organized and manage your work tasks efficiently.
         </AppText>
       </View>
 
       <View style={styles.statsGrid}>
         {statItems.map((item) => (
-          <Card key={item.label} style={styles.statCard}>
+          <Card
+            key={item.label}
+            style={[styles.statCard, { backgroundColor: item.backgroundColor }]}
+          >
             <View style={styles.statHeader}>
               <View style={[styles.statDot, { backgroundColor: item.color }]} />
 
-              <AppText variant="caption" color={theme.colors.textMuted}>
+              <AppText variant="caption" color={theme.colors.textMuted} numberOfLines={1}>
                 {item.label}
               </AppText>
             </View>
 
-            <View style={[styles.statValueBox, { backgroundColor: item.backgroundColor }]}>
-              <AppText variant="title" color={item.color} style={styles.statValue}>
-                {item.value}
-              </AppText>
-            </View>
+            <AppText variant="subtitle" color={item.color} style={styles.statValue}>
+              {item.value}
+            </AppText>
           </Card>
         ))}
       </View>
@@ -97,18 +98,22 @@ const styles = StyleSheet.create({
 
   header: {
     gap: theme.spacing.xs,
-    marginBottom: theme.spacing.xl,
+    marginBottom: theme.spacing.lg,
   },
 
   statsGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: theme.spacing.md,
+    gap: theme.spacing.sm,
   },
 
   statCard: {
-    width: '47.5%',
-    gap: theme.spacing.md,
+    width: '48%',
+    minHeight: 46,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: theme.spacing.sm,
     backgroundColor: theme.colors.surfaceStrong,
     padding: theme.spacing.md,
   },
@@ -125,15 +130,12 @@ const styles = StyleSheet.create({
     borderRadius: 999,
   },
 
-  statValueBox: {
-    minHeight: 54,
-    borderRadius: theme.radius.md,
-    alignItems: 'center',
-    justifyContent: 'center',
+  statLabel: {
+    flex: 1,
   },
 
   statValue: {
-    fontSize: 28,
-    lineHeight: 34,
+    fontSize: 24,
+    lineHeight: 28,
   },
 });

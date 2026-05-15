@@ -1,37 +1,29 @@
-import { router, useFocusEffect } from 'expo-router';
+import { router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { useCallback, useState } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 
-import { getStoredTasks } from '@/src/entities/task/model/task.storage';
-import { Task } from '@/src/entities/task/model/task.types';
+import { TaskSortControl } from '@/src/features/task-sorting/ui/TaskSortControl';
 import { AppIconButton, AppLoader, AppText, Screen } from '@/src/shared/components';
 import { theme } from '@/src/shared/config/theme';
+import { useTasks } from '@/src/shared/utils/useTasks';
+import { TaskDetailsModal } from '@/src/widgets/task-details-modal/TaskDetailsModal';
 import { stylesEmptyState, TasksEmptyState } from '@/src/widgets/tasks-empty-state/TasksEmptyState';
 import { TasksHeader } from '@/src/widgets/tasks-header/TasksHeader';
 import { TasksList } from '@/src/widgets/tasks-list/TasksList';
 
 export default function HomeScreen() {
-  const [tasks, setTasks] = useState<Task[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useFocusEffect(
-    useCallback(() => {
-      async function loadTasks() {
-        try {
-          setIsLoading(true);
-
-          const storedTasks = await getStoredTasks();
-
-          setTasks(storedTasks);
-        } finally {
-          setIsLoading(false);
-        }
-      }
-
-      loadTasks();
-    }, []),
-  );
+  const {
+    tasks,
+    sortedTasks,
+    sortType,
+    setSortType,
+    isLoading,
+    selectedTask,
+    openTaskDetails,
+    closeTaskDetails,
+    updateTask,
+    deleteTask,
+  } = useTasks();
 
   return (
     <Screen withPadding={false} backgroundColor={theme.colors.topSection}>
@@ -44,6 +36,9 @@ export default function HomeScreen() {
           <View style={styles.mainContent}>
             <View style={styles.sectionHeader}>
               <AppText variant="subtitle">All tasks</AppText>
+              {tasks.length > 0 ? (
+                <TaskSortControl value={sortType} onChange={setSortType} />
+              ) : null}
             </View>
 
             {isLoading ? (
@@ -51,7 +46,7 @@ export default function HomeScreen() {
                 <AppLoader text="Loading tasks..." />
               </View>
             ) : tasks.length > 0 ? (
-              <TasksList tasks={tasks} />
+              <TasksList tasks={sortedTasks} onTaskPress={openTaskDetails} />
             ) : (
               <TasksEmptyState />
             )}
@@ -66,6 +61,14 @@ export default function HomeScreen() {
             iconColor={theme.colors.text}
           />
         )}
+
+        <TaskDetailsModal
+          visible={Boolean(selectedTask)}
+          task={selectedTask}
+          onClose={closeTaskDetails}
+          onUpdate={updateTask}
+          onDelete={deleteTask}
+        />
       </View>
     </Screen>
   );
@@ -92,7 +95,10 @@ const styles = StyleSheet.create({
   },
 
   sectionHeader: {
-    marginBottom: theme.spacing.md,
+    marginBottom: theme.spacing.xl,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
 
   floatingButton: {
