@@ -138,11 +138,7 @@ export function TaskDetailsModal({
                 onSave={handleUpdateTask}
               />
             ) : (
-              <TaskDetailsView
-                task={currentTask}
-                onStatusChange={handleStatusChange}
-                isStatusUpdating={isStatusUpdating}
-              />
+              <TaskDetailsView task={currentTask} onStatusChange={handleStatusChange} />
             )}
           </ScrollView>
         </View>
