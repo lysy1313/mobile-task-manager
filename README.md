@@ -134,34 +134,6 @@ Run on a physical device:
 2. Start the project with `npm start`.
 3. Scan the QR code from the terminal or browser.
 
-## Android APK Build
-
-The APK can be built with EAS Build.
-
-Install EAS CLI if needed:
-
-```bash
-npm install -g eas-cli
-```
-
-Login to Expo:
-
-```bash
-eas login
-```
-
-Configure EAS:
-
-```bash
-eas build:configure
-```
-
-Build Android APK:
-
-```bash
-eas build -p android --profile preview
-```
-
 ## Notes
 
 The project focuses on clean structure, readable code, reusable components, local data persistence, and a simple modern mobile UI.
