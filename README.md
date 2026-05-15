@@ -1,50 +1,167 @@
-# Welcome to your Expo app 👋
+# Mobile Task Manager
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A simple mobile task management application built with React Native and Expo.
 
-## Get started
+The app allows users to create, view, edit, delete, sort, and manage work tasks locally on the device.
 
-1. Install dependencies
+## Features
 
-   ```bash
-   npm install
-   ```
+- Create new tasks with:
+  - title
+  - description
+  - execution date and time
+  - location
+- View all created tasks in a clean task list
+- Open task details in a modal
+- Edit existing tasks
+- Delete tasks
+- Change task status:
+  - In Progress
+  - Completed
+  - Cancelled
+- Quickly update task status from the details modal
+- Sort tasks by:
+  - newest first
+  - oldest first
+  - status
+- Store all task data locally on the device using AsyncStorage
+- Validate task forms with React Hook Form and Zod
+- Use reusable UI components
+- Support mobile-friendly keyboard behavior and safe area layout
 
-2. Start the app
+## Tech Stack
 
-   ```bash
-   npx expo start
-   ```
+- React Native
+- Expo
+- Expo Router
+- TypeScript
+- React Hook Form
+- Zod
+- AsyncStorage
+- React Native DateTimePicker
+- Expo Vector Icons
 
-In the output, you'll find options to open the app in a
+## Project Structure
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+```text
+app/
+  _layout.tsx
+  index.tsx
+  create-task.tsx
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+src/
+  entities/
+    task/
+      model/
+      ui/
 
-## Get a fresh project
+  features/
+    create-task/
+    task-management/
+    task-sorting/
 
-When you're ready, run:
+  widgets/
+    task-details-modal/
+    tasks-header/
+    tasks-list/
 
-```bash
-npm run reset-project
+  shared/
+    components/
+    config/
+    utils/
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+## Main Screens
 
-## Learn more
+### Tasks Screen
 
-To learn more about developing your project with Expo, look at the following resources:
+The main screen displays all saved tasks, task statistics, sorting controls, and a floating action button for creating a new task.
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+### Create Task Screen
 
-## Join the community
+The create task screen contains a validated form where users can enter task information and save it locally.
 
-Join our community of developers creating universal apps.
+### Task Details Modal
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+The task details modal allows users to view full task information, quickly change task status, edit task data, or delete the task.
+
+## Local Storage
+
+All tasks are stored locally on the device using AsyncStorage.
+
+Storage key:
+
+```text
+task-manager:tasks
+```
+
+This ensures that tasks remain available after the app is closed and reopened.
+
+## Validation
+
+The app uses Zod schemas together with React Hook Form to validate task forms.
+
+Required fields:
+
+- title
+- description
+- location
+- execution date and time
+
+## How to Run
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Start the Expo development server:
+
+```bash
+npm start
+```
+
+Run on web:
+
+```bash
+npm run web
+```
+
+Run on a physical device:
+
+1. Install Expo Go on your phone.
+2. Start the project with `npm start`.
+3. Scan the QR code from the terminal or browser.
+
+## Android APK Build
+
+The APK can be built with EAS Build.
+
+Install EAS CLI if needed:
+
+```bash
+npm install -g eas-cli
+```
+
+Login to Expo:
+
+```bash
+eas login
+```
+
+Configure EAS:
+
+```bash
+eas build:configure
+```
+
+Build Android APK:
+
+```bash
+eas build -p android --profile preview
+```
+
+## Notes
+
+The project focuses on clean structure, readable code, reusable components, local data persistence, and a simple modern mobile UI.
